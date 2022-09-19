@@ -12,39 +12,36 @@ import (
 
 // Basic info of ERC20 token that are stable.
 type ERC20Info struct {
-	Network  string
-	Address  string
-	Symbol   string
-	Decimals int
+	Network  *string
+	Address  *string
+	Symbol   *string
+	Decimals *int
 	Contract *erc20.Erc20
 }
 
-func (t *ERC20Info) Init(address string, network string, client bind.ContractBackend) (ERC20Info, error) {
+func (t *ERC20Info) Init(address string, network string, client bind.ContractBackend) error {
 	err := addressRegularCheck(address)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
-	token, err := erc20.NewErc20(types.ToAddress(address), client)
+	t.Network = &network
+	t.Address = &address
+	t.Contract, err = erc20.NewErc20(types.ToAddress(address), client)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
-	decimals, err := token.Decimals(nil)
+	decimals, err := t.Contract.Decimals(nil)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
-	symbol, err := token.Symbol(nil)
+	decimalint := int(decimals.Int64())
+	t.Decimals = &decimalint
+	symbol, err := t.Contract.Symbol(nil)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
-
-	new := ERC20Info{
-		Network:  network,
-		Address:  address,
-		Symbol:   symbol,
-		Decimals: int(decimals.Int64()),
-		Contract: token,
-	}
-	return new, nil
+	t.Symbol = &symbol
+	return nil
 }
 
 // Return token's total supply amount, already divided by decimals.
@@ -53,21 +50,21 @@ func (t *ERC20Info) TotalSupply() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	totalSupply := types.ToFloat64(supply) * math.Pow10(-t.Decimals)
+	totalSupply := types.ToFloat64(supply) * math.Pow10(-*t.Decimals)
 	if totalSupply == 0 {
-		return 0, errors.New(t.Symbol + " total supply is zero")
+		return 0, errors.New(*t.Symbol + " total supply is zero")
 	}
 	return totalSupply, nil
 }
 
 // Return token's price.
 func (t *ERC20Info) PriceUSD(gecko *coingecko.Gecko) (float64, error) {
-	price, err := gecko.GetPriceBySymbol(t.Symbol, t.Network, "usd")
+	price, err := gecko.GetPriceBySymbol(*t.Symbol, *t.Network, "usd")
 	if err != nil {
 		return 0, err
 	}
 	if price == 0 {
-		return 0, errors.New(t.Symbol + "price is zero")
+		return 0, errors.New(*t.Symbol + "price is zero")
 	}
 	return price, nil
 }
@@ -92,6 +89,6 @@ func (t *ERC20Info) BalanceOf(address string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-	balance := types.ToFloat64(balanceBig) * math.Pow10(-t.Decimals)
+	balance := types.ToFloat64(balanceBig) * math.Pow10(-*t.Decimals)
 	return balance, nil
 }
