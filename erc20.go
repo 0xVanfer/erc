@@ -19,32 +19,32 @@ type ERC20Info struct {
 	Contract *erc20.Erc20
 }
 
-func (t *ERC20Info) Init(address string, network string, client bind.ContractBackend) (ERC20Info, error) {
+func (t *ERC20Info) Init(address string, network string, client bind.ContractBackend) error {
 	err := addressRegularCheck(address)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
 	token, err := erc20.NewErc20(types.ToAddress(address), client)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
 	decimals, err := token.Decimals(nil)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
 	symbol, err := token.Symbol(nil)
 	if err != nil {
-		return ERC20Info{}, err
+		return err
 	}
 
-	new := ERC20Info{
+	t = &ERC20Info{
 		Network:  network,
 		Address:  address,
 		Symbol:   symbol,
 		Decimals: int(decimals.Int64()),
 		Contract: token,
 	}
-	return new, nil
+	return nil
 }
 
 // Return token's total supply amount, already divided by decimals.
