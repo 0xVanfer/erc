@@ -3,8 +3,10 @@ package erc
 import (
 	"errors"
 	"math"
+	"strings"
 
 	"github.com/0xVanfer/abigen/erc20"
+	"github.com/0xVanfer/chainId"
 	"github.com/0xVanfer/coingecko"
 	"github.com/0xVanfer/types"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -39,6 +41,10 @@ func (t *ERC20Info) Init(address string, network string, client bind.ContractBac
 	symbol, err := t.Contract.Symbol(nil)
 	if err != nil {
 		return err
+	}
+	// fuck maker
+	if strings.EqualFold(address, "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") && strings.EqualFold(network, chainId.EthereumChainName) {
+		symbol = "MKR"
 	}
 	t.Symbol = &symbol
 	return nil
