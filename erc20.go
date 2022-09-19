@@ -45,6 +45,7 @@ func (t *ERC20Info) Init(address string, network string, client bind.ContractBac
 		Contract: token,
 	}
 	return new, nil
+
 }
 
 // Return token's total supply amount, already divided by decimals.
