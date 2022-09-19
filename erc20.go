@@ -38,13 +38,16 @@ func (t *ERC20Info) Init(address string, network string, client bind.ContractBac
 	}
 	decimalint := int(decimals.Int64())
 	t.Decimals = &decimalint
-	symbol, err := t.Contract.Symbol(nil)
-	if err != nil {
-		return err
-	}
+	var symbol string
+
 	// fuck maker
 	if strings.EqualFold(address, "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") && strings.EqualFold(network, chainId.EthereumChainName) {
 		symbol = "MKR"
+	} else {
+		symbol, err = t.Contract.Symbol(nil)
+		if err != nil {
+			return err
+		}
 	}
 	t.Symbol = &symbol
 	return nil
