@@ -21,6 +21,7 @@ type ERC20Info struct {
 	Contract *erc20.Erc20
 }
 
+// Initiate the erc20 token.
 func (t *ERC20Info) Init(address string, network string, client bind.ContractBackend) error {
 	err := addressRegularCheck(address)
 	if err != nil {
@@ -39,7 +40,6 @@ func (t *ERC20Info) Init(address string, network string, client bind.ContractBac
 	decimalint := int(decimals.Int64())
 	t.Decimals = &decimalint
 	var symbol string
-
 	// fuck maker
 	if strings.EqualFold(address, "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") && strings.EqualFold(network, chainId.EthereumChainName) {
 		symbol = "MKR"
@@ -55,6 +55,9 @@ func (t *ERC20Info) Init(address string, network string, client bind.ContractBac
 
 // Return token's total supply amount, already divided by decimals.
 func (t *ERC20Info) TotalSupply() (float64, error) {
+	if t.Contract == nil {
+		return 0, errors.New("token must be initiated")
+	}
 	supply, err := t.Contract.TotalSupply(nil)
 	if err != nil {
 		return 0, err
@@ -68,6 +71,9 @@ func (t *ERC20Info) TotalSupply() (float64, error) {
 
 // Return token's price.
 func (t *ERC20Info) PriceUSD(gecko *coingecko.Gecko) (float64, error) {
+	if t.Contract == nil {
+		return 0, errors.New("token must be initiated")
+	}
 	price, err := gecko.GetPriceBySymbol(*t.Symbol, *t.Network, "usd")
 	if err != nil {
 		return 0, err
@@ -80,6 +86,9 @@ func (t *ERC20Info) PriceUSD(gecko *coingecko.Gecko) (float64, error) {
 
 // Return token's total supply in usd.
 func (t *ERC20Info) TotalSupplyUSD(gecko *coingecko.Gecko) (float64, error) {
+	if t.Contract == nil {
+		return 0, errors.New("token must be initiated")
+	}
 	supply, err := t.TotalSupply()
 	if err != nil {
 		return 0, err
@@ -94,6 +103,9 @@ func (t *ERC20Info) TotalSupplyUSD(gecko *coingecko.Gecko) (float64, error) {
 
 // Return the balance, already divided by decimals.
 func (t *ERC20Info) BalanceOf(address string) (float64, error) {
+	if t.Contract == nil {
+		return 0, errors.New("token must be initiated")
+	}
 	balanceBig, err := t.Contract.BalanceOf(nil, types.ToAddress(address))
 	if err != nil {
 		return 0, err
