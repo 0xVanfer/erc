@@ -9,6 +9,7 @@ import (
 	"github.com/0xVanfer/chainId"
 	"github.com/0xVanfer/coingecko"
 	"github.com/0xVanfer/types"
+	"github.com/0xVanfer/utils"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 )
 
@@ -21,6 +22,39 @@ type ERC20Info struct {
 	Contract *erc20.Erc20
 }
 
+func NewErc20(address string, network string, client bind.ContractBackend) (*ERC20Info, error) {
+	err := addressRegularCheck(address)
+	if err != nil {
+		return nil, err
+	}
+	var new ERC20Info
+	new.Network = &network
+	checksumed := utils.ChecksumEthereumAddress(address)
+	new.Address = &checksumed
+	new.Contract, err = erc20.NewErc20(types.ToAddress(address), client)
+	if err != nil {
+		return nil, err
+	}
+	decimals, err := new.Contract.Decimals(nil)
+	if err != nil {
+		return nil, err
+	}
+	decimalint := int(decimals.Int64())
+	new.Decimals = &decimalint
+	var symbol string
+	// fuck maker
+	if strings.EqualFold(address, "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2") && strings.EqualFold(network, chainId.EthereumChainName) {
+		symbol = "MKR"
+	} else {
+		symbol, err = new.Contract.Symbol(nil)
+		if err != nil {
+			return nil, err
+		}
+	}
+	new.Symbol = &symbol
+	return &new, nil
+}
+
 // Initiate the erc20 token.
 func (t *ERC20Info) Init(address string, network string, client bind.ContractBackend) error {
 	err := addressRegularCheck(address)
@@ -28,7 +62,8 @@ func (t *ERC20Info) Init(address string, network string, client bind.ContractBac
 		return err
 	}
 	t.Network = &network
-	t.Address = &address
+	checksumed := utils.ChecksumEthereumAddress(address)
+	t.Address = &checksumed
 	t.Contract, err = erc20.NewErc20(types.ToAddress(address), client)
 	if err != nil {
 		return err

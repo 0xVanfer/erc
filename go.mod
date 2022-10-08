@@ -7,6 +7,7 @@ require (
 	github.com/0xVanfer/chainId v0.1.0
 	github.com/0xVanfer/coingecko v0.1.1
 	github.com/0xVanfer/types v0.1.2
+	github.com/0xVanfer/utils v0.0.4
 	github.com/ethereum/go-ethereum v1.10.25
 )
 
