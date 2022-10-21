@@ -10,7 +10,7 @@ func addressRegularCheck(address string) error {
 		return errors.New("address should not be zero address")
 	}
 	if len(address) != 42 {
-		return errors.New("address length must be 42")
+		return errors.New("address length must be 42: " + address)
 	}
 	return nil
 }
