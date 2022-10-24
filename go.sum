@@ -1,13 +1,9 @@
-github.com/0xVanfer/abigen v0.1.4 h1:vTBQsPllBjwhQu5r/EydOGDO4kKjJHnMxAOvPFivwnk=
-github.com/0xVanfer/abigen v0.1.4/go.mod h1:uOU++SxhSl43YMgOYutXM+MpjQzViQtsn8B+LID5xhY=
+github.com/0xVanfer/abigen v0.1.5 h1:S1q1HfbfsBBEelct96cpWyy5xHZOFmHs1K0AgSd4E3E=
+github.com/0xVanfer/abigen v0.1.5/go.mod h1:uOU++SxhSl43YMgOYutXM+MpjQzViQtsn8B+LID5xhY=
 github.com/0xVanfer/chainId v0.1.1 h1:aQrBUm45j02lIWe2nOha4woJUPMucFLmxJ3TIimPUQM=
 github.com/0xVanfer/chainId v0.1.1/go.mod h1:YgJHKMKd0J+3VGCoBMjaVE5GUdwQz5Ud585Pr9vEg40=
-github.com/0xVanfer/coingecko v0.1.2 h1:9023GrxRyBrh+2DWxNvIW+Dv1yIscCVjCo+WTN2djWQ=
-github.com/0xVanfer/coingecko v0.1.2/go.mod h1:imy8PZn/TS/oFill7k6Hk36zfS//2RLVB0j9RyyqHFQ=
 github.com/0xVanfer/types v0.1.2 h1:86pFlkOvag5GLYknovhsL277pDiIoNor2e3yDBt7tRw=
 github.com/0xVanfer/types v0.1.2/go.mod h1:8QSGeOQOStzyb8kAZXRVnxJLOJVMqI16lO/a+OBXFOc=
-github.com/0xVanfer/utils v0.0.6 h1:rdnr4EzwIiRGHyXAG4Eos2cMc4i1U52sFbq2Y91nZ68=
-github.com/0xVanfer/utils v0.0.6/go.mod h1:wWhqMc9+iw422XE4IzcJGeVif1qu1KB455lvpinA6nQ=
 github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 h1:fLjPD/aNc3UIOA6tDi6QXUemppXK3P9BI7mr2hd6gx8=
 github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6/go.mod h1:3eOhrUMpNV+6aFIbp5/iudMxNCF27Vw2OZgy4xEx0Fg=
 github.com/VictoriaMetrics/fastcache v1.6.0 h1:C/3Oi3EiBCqufydp1neRZkqcwmEiuRT9c3fqvvgKm5o=
@@ -78,8 +74,8 @@ golang.org/x/crypto v0.0.0-20210921155107-089bfa567519 h1:7I4JAnoQBe7ZtJcBaYHi5U
 golang.org/x/crypto v0.0.0-20210921155107-089bfa567519/go.mod h1:GvvjBRRGRdwPK5ydBHafDWAxML/pGHZbMvKqRZ5+Abc=
 golang.org/x/sync v0.0.0-20210220032951-036812b2e83c h1:5KslGYwFpkhGh+Q16bwMP3cOontH8FOep7tGV86Y7SQ=
 golang.org/x/sys v0.0.0-20210316164454-77fc1eacc6aa/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a h1:dGzPydgVsqGcTRVwiLJ1jVbufYwmzD3LfVPLKsKg+0k=
-golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 h1:WIoqL4EROvwiPdUtaip4VcDdpZ4kha7wBWZrbVKCIZg=
+golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/text v0.3.7 h1:olpwvP2KacW1ZWvsR7uQhoyTYvKAupfQrRGBFM352Gk=
 golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba h1:O8mE0/t419eoIwhTFpKVkHiTs/Igowgfkj25AcZrtiE=
 gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce h1:+JknDZhAj8YMt7GC73Ei8pv4MzjDUNPHgQWJdtMAaDU=

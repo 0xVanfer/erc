@@ -2,6 +2,7 @@ package erc
 
 import "errors"
 
+// Regular check the input address.
 func addressRegularCheck(address string) error {
 	if address == "" {
 		return errors.New("address should not be empty")
