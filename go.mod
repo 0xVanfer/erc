@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/0xVanfer/abigen v0.1.5
 	github.com/0xVanfer/chainId v0.1.1
-	github.com/0xVanfer/types v0.1.2
+	github.com/0xVanfer/types v0.1.3
 	github.com/ethereum/go-ethereum v1.10.25
 	github.com/shopspring/decimal v1.3.1
 	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
