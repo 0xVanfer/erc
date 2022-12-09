@@ -2,46 +2,40 @@ package erc
 
 import (
 	"errors"
-	"strings"
 
 	"github.com/0xVanfer/abigen/erc20"
-	"github.com/0xVanfer/chainId"
 	"github.com/0xVanfer/types"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/shopspring/decimal"
 )
 
-// Basic info of ERC20 token.
-type ERC20Info struct {
-	Network  *string
-	Address  *string
-	Symbol   *string
-	Decimals *int
-	Contract *erc20.Erc20
-}
-
 // Create a new ERC20 token.
 func NewErc20(address string, network string, client bind.ContractBackend) (*ERC20Info, error) {
+	// Address must be length 42 and not 0x0.
 	err := addressRegularCheck(address)
 	if err != nil {
 		return nil, err
 	}
 	var new ERC20Info
 	new.Network = &network
+	// Use checksumed address.
 	checksumed := checksumEthereumAddress(address)
 	new.Address = &checksumed
+	// Contract.
 	new.Contract, err = erc20.NewErc20(types.ToAddress(address), client)
 	if err != nil {
 		return nil, err
 	}
+	// Decimals.
 	decimals, err := new.Contract.Decimals(nil)
 	if err != nil {
 		return nil, err
 	}
 	decimalint := int(decimals.Int64())
 	new.Decimals = &decimalint
+	// Symbol.
 	var symbol string
-	// fuck maker
+	// Maker symbol must be handled seperatedly.
 	if fuckMaker(address, network) {
 		symbol = "MKR"
 	} else {
@@ -54,30 +48,20 @@ func NewErc20(address string, network string, client bind.ContractBackend) (*ERC
 	return &new, nil
 }
 
-// Maker symbol is bytes instead of string.
-//
-// Return whether the token is MKR.
-func fuckMaker(address string, network string) bool {
-	switch network {
-	// ethereum
-	case chainId.EthereumChainName:
-		// whether it is MKR
-		return strings.EqualFold(address, "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2")
-	default:
-		return false
-	}
-}
-
 // Return token's total supply amount, already divided by decimals.
 func (t *ERC20Info) TotalSupply() (decimal.Decimal, error) {
+	// Token must initiated.
 	if t.Contract == nil {
 		return decimal.New(0, 0), errors.New("token must be initiated")
 	}
+	// Get total supply.
 	supply, err := t.Contract.TotalSupply(nil)
 	if err != nil {
 		return decimal.New(0, 0), err
 	}
+	// Divide by decimals and turn into decimal.Decimal.
 	totalSupply := types.ToDecimal(supply).Div(decimal.New(1, int32(*t.Decimals)))
+	// Read total supply succeeded, but is zero.
 	if totalSupply.IsZero() {
 		return decimal.New(0, 0), errors.New(*t.Symbol + " total supply is zero")
 	}
@@ -86,13 +70,52 @@ func (t *ERC20Info) TotalSupply() (decimal.Decimal, error) {
 
 // Return the balance, already divided by decimals.
 func (t *ERC20Info) BalanceOf(address string) (decimal.Decimal, error) {
+	// Token must initiated.
 	if t.Contract == nil {
 		return decimal.New(0, 0), errors.New("token must be initiated")
 	}
+	// Read the balance.
 	balanceBig, err := t.Contract.BalanceOf(nil, types.ToAddress(address))
 	if err != nil {
 		return decimal.New(0, 0), err
 	}
+	// Divide by decimals and turn into decimal.Decimal.
+	balance := types.ToDecimal(balanceBig).Div(decimal.New(1, int32(*t.Decimals)))
+	return balance, nil
+}
+
+// Return token's history total supply amount at `blockNumber`, already divided by decimals.
+func (t *ERC20Info) HistoryTotalSupply(blockNumber int64) (decimal.Decimal, error) {
+	// Token must initiated.
+	if t.Contract == nil {
+		return decimal.New(0, 0), errors.New("token must be initiated")
+	}
+	// Get total supply.
+	supply, err := t.Contract.TotalSupply(&bind.CallOpts{BlockNumber: types.ToBigInt(blockNumber)})
+	if err != nil {
+		return decimal.New(0, 0), err
+	}
+	// Divide by decimals and turn into decimal.Decimal.
+	totalSupply := types.ToDecimal(supply).Div(decimal.New(1, int32(*t.Decimals)))
+	// Read total supply succeeded, but is zero.
+	if totalSupply.IsZero() {
+		return decimal.New(0, 0), errors.New(*t.Symbol + " total supply is zero")
+	}
+	return totalSupply, nil
+}
+
+// Return the balance, already divided by decimals.
+func (t *ERC20Info) HistoryBalanceOf(address string, blockNumber int64) (decimal.Decimal, error) {
+	// Token must initiated.
+	if t.Contract == nil {
+		return decimal.New(0, 0), errors.New("token must be initiated")
+	}
+	// Read the balance.
+	balanceBig, err := t.Contract.BalanceOf(&bind.CallOpts{BlockNumber: types.ToBigInt(blockNumber)}, types.ToAddress(address))
+	if err != nil {
+		return decimal.New(0, 0), err
+	}
+	// Divide by decimals and turn into decimal.Decimal.
 	balance := types.ToDecimal(balanceBig).Div(decimal.New(1, int32(*t.Decimals)))
 	return balance, nil
 }
